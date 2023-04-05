@@ -1,0 +1,10 @@
+name: Tests On Push
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  run-tests-and-upload-coverage:
+    uses: dsk1306/foundationExtensions/.github/workflows/run-tests-and-upload-coverage.yml@dev
+    secrets: inherit
