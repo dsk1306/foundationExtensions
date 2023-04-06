@@ -27,7 +27,7 @@ public extension KeyedDecodingContainer {
             throw DecodingError.dataCorruptedError(
                 forKey: key,
                 in: self,
-                debugDescription: "Decoded string should not be empty"
+                debugDescription: DecodingErrorDebugDescription.emptyString
             )
         }
         return string
@@ -70,7 +70,7 @@ private extension DecodingError {
         dataCorruptedError(
             forKey: key,
             in: container,
-            debugDescription: "Expected ISO8601 date string"
+            debugDescription: DecodingErrorDebugDescription.iso8601DateString
         )
     }
 
