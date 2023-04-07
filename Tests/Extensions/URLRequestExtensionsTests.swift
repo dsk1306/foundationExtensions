@@ -6,29 +6,28 @@ final class URLRequestExtensionsTests: XCTestCase {
     // MARK: - Tests
 
     func test_appendingHeaders() {
-        let request = URLRequest(url: Mock.url)
-            .appendingHeader(value: Mock.value1, forKey: Mock.key1)
+        let request = Mock.request.appendingHeader(
+            value: Mock.value1,
+            forKey: Mock.key1
+        )
 
         XCTAssertEqual(request.allHTTPHeaderFields, Mock.headers1)
     }
 
     func test_appendingHeadersArray() {
-        let request = URLRequest(url: Mock.url)
-            .appendingHeaders(Mock.headers2)
+        let request = Mock.request.appendingHeaders(Mock.headers2)
 
         XCTAssertEqual(request.allHTTPHeaderFields, Mock.headers2)
     }
 
     func test_withMethod_get() {
-        let request = URLRequest(url: Mock.url)
-            .withMethod(.get)
+        let request = Mock.request.withMethod(.get)
 
         XCTAssertEqual(request.httpMethod, "GET")
     }
 
     func test_withMethod_post() {
-        let request = URLRequest(url: Mock.url)
-            .withMethod(.post)
+        let request = Mock.request.withMethod(.post)
 
         XCTAssertEqual(request.httpMethod, "POST")
     }
@@ -41,7 +40,7 @@ private extension URLRequestExtensionsTests {
 
     enum Mock {
 
-        static let url = URL(string: "example.com")!
+        static let request = URLRequest(url: URL(string: "example.com")!)
         static let value1 = "Accept-Encoding"
         static let value2 = "Accept"
         static let key1 = "gzip, deflate, br"

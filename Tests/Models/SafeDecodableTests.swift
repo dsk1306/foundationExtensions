@@ -7,7 +7,7 @@ final class SafeDecodableTests: XCTestCase {
 
     func test_value_success() throws {
         let json = #"{ "firstValue": "test1", "secondValue": "test2" }"#
-        let decoded = try Self.decode(json: json)
+        let decoded = try decodeValue(json: json)
 
         XCTAssertEqual(decoded?.firstValue, "test1")
         XCTAssertEqual(decoded?.secondValue, "test2")
@@ -15,7 +15,14 @@ final class SafeDecodableTests: XCTestCase {
 
     func test_value_partialSuccess() throws {
         let json = #"{ "firstValue": "test1" }"#
-        let decoded = try Self.decode(json: json)
+        let decoded = try decodeValue(json: json)
+
+        XCTAssertNil(decoded)
+    }
+
+    func test_value_fail() throws {
+        let json = #" 1 "#
+        let decoded = try decodeValue(json: json)
 
         XCTAssertNil(decoded)
     }
@@ -26,8 +33,10 @@ final class SafeDecodableTests: XCTestCase {
 
 private extension SafeDecodableTests {
 
-    static func decode(json: String) throws -> MockModel? {
-        guard let data = json.data(using: .utf8) else { return nil }
+    func decodeValue(json: String) throws -> MockModel? {
+        guard let data = json.data(using: .utf8) else {
+            throw TestError.stringToData
+        }
         return try JSONDecoder().decode(SafeDecodable<MockModel>.self, from: data).value
     }
 

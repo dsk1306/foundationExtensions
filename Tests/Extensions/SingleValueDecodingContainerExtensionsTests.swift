@@ -6,47 +6,80 @@ final class SingleValueDecodingContainerExtensionsTests: XCTestCase {
     // MARK: - Tests - Decode Collection Safely
 
     func test_decodeCollectionSafely_success() throws {
-        let decoded = try Self.decode(type: MockCollectionSafelyModel.self, from: Mock.collectionJSON1)
+        let decoded = try decode(
+            type: CollectionSafelyModel.self,
+            from: Mock.collectionJSON1
+        )
 
         XCTAssertEqual(decoded.array, Mock.collection1)
     }
 
     func test_decodeCollectionSafely_partialSuccess() throws {
-        let decoded = try Self.decode(type: MockCollectionSafelyModel.self, from: Mock.collectionJSON2)
+        let decoded = try decode(
+            type: CollectionSafelyModel.self,
+            from: Mock.collectionJSON2
+        )
 
         XCTAssertEqual(decoded.array, Mock.collection2)
     }
 
     func test_decodeCollectionSafely_fail() {
-        XCTAssertThrowsError(try Self.decode(type: MockCollectionSafelyModel.self, from: Mock.collectionWrongJSON1))
+        XCTAssertThrowsError(try decode(
+            type: CollectionSafelyModel.self,
+            from: Mock.collectionWrongJSON
+        ))
     }
 
     // MARK: - Tests - Decode Not Empty String
 
     func test_decodeNotEmptyString_success() throws {
-        let decoded = try Self.decode(type: MockNotEmptyStringModel.self, from: Mock.stringJSON)
+        let decoded = try decode(
+            type: NotEmptyStringModel.self,
+            from: Mock.stringJSON
+        )
 
         XCTAssertEqual(decoded.string, Mock.stringJSONFirstString)
     }
 
     func test_decodeNotEmptyString_fail() {
-        XCTAssertThrowsError(try Self.decode(type: MockNotEmptyStringModel.self, from: Mock.stringWrongJSON1))
-        XCTAssertThrowsError(try Self.decode(type: MockNotEmptyStringModel.self, from: Mock.stringWrongJSON2))
-        XCTAssertThrowsError(try Self.decode(type: MockNotEmptyStringModel.self, from: Mock.stringWrongJSON3))
-        XCTAssertThrowsError(try Self.decode(type: MockNotEmptyStringModel.self, from: Mock.stringWrongJSON4))
+        XCTAssertThrowsError(try decode(
+            type: NotEmptyStringModel.self,
+            from: Mock.stringWrongJSON1
+        ))
+        XCTAssertThrowsError(try decode(
+            type: NotEmptyStringModel.self,
+            from: Mock.stringWrongJSON2
+        ))
+        XCTAssertThrowsError(try decode(
+            type: NotEmptyStringModel.self,
+            from: Mock.stringWrongJSON3
+        ))
+        XCTAssertThrowsError(try decode(
+            type: NotEmptyStringModel.self,
+            from: Mock.stringWrongJSON4
+        ))
     }
 
     // MARK: - Tests - Decode ISO8601 Date
 
-    func test_decodeISO8601Date_success() throws {
-        let decoded = try Self.decode(type: MockISO8601DateModel.self, from: Mock.dateJSON)
+    func test_decodeISO8601DateString_success() throws {
+        let decoded = try decode(
+            type: ISO8601DateStringModel.self,
+            from: Mock.dateJSON
+        )
 
         XCTAssertEqual(decoded.date, Mock.dateJSONFirstDate)
     }
 
-    func test_decodeISO8601Date_fail() {
-        XCTAssertThrowsError(try Self.decode(type: MockISO8601DateModel.self, from: Mock.dateWrongJSON1))
-        XCTAssertThrowsError(try Self.decode(type: MockISO8601DateModel.self, from: Mock.dateWrongJSON2))
+    func test_decodeISO8601DateString_fail() {
+        XCTAssertThrowsError(try decode(
+            type: ISO8601DateStringModel.self,
+            from: Mock.dateWrongJSON1
+        ))
+        XCTAssertThrowsError(try decode(
+            type: ISO8601DateStringModel.self,
+            from: Mock.dateWrongJSON2
+        ))
     }
 
 }
@@ -55,9 +88,9 @@ final class SingleValueDecodingContainerExtensionsTests: XCTestCase {
 
 private extension SingleValueDecodingContainerExtensionsTests {
 
-    static func decode<Base: Decodable>(type: Base.Type, from json: String) throws -> Base {
+    func decode<Base: Decodable>(type: Base.Type, from json: String) throws -> Base {
         guard let data = json.data(using: .utf8) else {
-            throw TestError.nilData
+            throw TestError.stringToData
         }
         return try JSONDecoder().decode(Base.self, from: data)
     }
@@ -72,7 +105,7 @@ private extension SingleValueDecodingContainerExtensionsTests {
 
         static let collectionJSON1 = #" [1,2,3,4,5,6,7,8,9] "#
         static let collectionJSON2 = #" [1,2,3,"some",5,6,7,[1,2,3],9] "#
-        static let collectionWrongJSON1 = #" "some" "#
+        static let collectionWrongJSON = #" "some" "#
 
         static let collection1 = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         static let collection2 = [1, 2, 3, 5, 6, 7, 9]
@@ -97,23 +130,11 @@ private extension SingleValueDecodingContainerExtensionsTests {
 
 }
 
-// MARK: - Test Error
+// MARK: - Collection Safely Model
 
 private extension SingleValueDecodingContainerExtensionsTests {
 
-    enum TestError: Error {
-
-        case nilData
-
-    }
-
-}
-
-// MARK: - Mock Collection Safely Model
-
-private extension SingleValueDecodingContainerExtensionsTests {
-
-    struct MockCollectionSafelyModel: Decodable {
+    struct CollectionSafelyModel: Decodable {
 
         let array: [Int]
 
@@ -126,11 +147,11 @@ private extension SingleValueDecodingContainerExtensionsTests {
 
 }
 
-// MARK: - Mock Not Empty String Model
+// MARK: - Not Empty String Model
 
 private extension SingleValueDecodingContainerExtensionsTests {
 
-    struct MockNotEmptyStringModel: Decodable {
+    struct NotEmptyStringModel: Decodable {
 
         let string: String
 
@@ -143,11 +164,11 @@ private extension SingleValueDecodingContainerExtensionsTests {
 
 }
 
-// MARK: - Mock ISO8601 Date Model
+// MARK: - ISO8601 Date String Model
 
 private extension SingleValueDecodingContainerExtensionsTests {
 
-    struct MockISO8601DateModel: Decodable {
+    struct ISO8601DateStringModel: Decodable {
 
         let date: Date
 
