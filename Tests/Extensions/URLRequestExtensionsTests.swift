@@ -19,6 +19,20 @@ final class URLRequestExtensionsTests: XCTestCase {
         XCTAssertEqual(request.allHTTPHeaderFields, Mock.headers2)
     }
 
+    func test_withMethod_get() {
+        let request = URLRequest(url: Mock.url)
+            .withMethod(.get)
+
+        XCTAssertEqual(request.httpMethod, "GET")
+    }
+
+    func test_withMethod_post() {
+        let request = URLRequest(url: Mock.url)
+            .withMethod(.post)
+
+        XCTAssertEqual(request.httpMethod, "POST")
+    }
+
 }
 
 // MARK: - Mock
