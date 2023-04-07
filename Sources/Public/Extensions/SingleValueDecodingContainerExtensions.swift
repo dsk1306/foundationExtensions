@@ -17,7 +17,7 @@ public extension SingleValueDecodingContainer {
         return string
     }
 
-    func decodeISO8601Date() throws -> Date {
+    func decodeISO8601DateString() throws -> Date {
         let dateString = try decodeNotEmptyString()
         guard let date = ISO8601DateFormatter().date(from: dateString) else {
             throw DecodingError.dataCorruptedError(
