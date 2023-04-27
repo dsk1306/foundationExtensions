@@ -1,3 +1,5 @@
+#if canImport(CoreGraphics)
+
 @testable import FoundationExtensions
 import XCTest
 
@@ -59,3 +61,5 @@ private extension CGRectExtensionsTests {
     }
 
 }
+
+#endif
